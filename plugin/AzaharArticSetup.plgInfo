@@ -1,0 +1,27 @@
+Author: Nanquitas
+
+Version: # Plugin version
+    Major: VERSION_MAJOR
+    Minor: VERSION_MINOR
+    Revision: VERSION_REVISION
+
+Targets: # Low TitleId of games which are compatibles with this plugin (empty for all)
+    - 0x00020000
+    - 0x00021000
+    - 0x00022000
+    - 0x00026000
+    - 0x00027000
+    - 0x00028000
+
+Title: Azahar Artic Setup Tool
+
+Summary: Setup tool for Azahar Emulator
+
+Description: |
+  Provides system files to the Azahar 3DS Emulator
+
+Compatibility: Console
+MemorySize: 2MiB
+
+EventsSelfManaged: true
+SwapNotNeeded: true
