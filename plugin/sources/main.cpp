@@ -159,7 +159,7 @@ void Start(void* arg) {
         articBase = nullptr;
         logger.Info("Server: Disconnected");
 
-        for (auto it = ArticBaseFunctions::destructFunctions.begin(); it != ArticBaseFunctions::destructFunctions.end(); it++) {
+        for (auto it = ArticFunctions::destructFunctions.begin(); it != ArticFunctions::destructFunctions.end(); it++) {
             (*it)();
         }
     }
@@ -212,7 +212,7 @@ void Main() {
     logger.Raw(true, "");
 
     bool setupCorrect = true;
-    for (auto it = ArticBaseFunctions::setupFunctions.begin(); it != ArticBaseFunctions::setupFunctions.end(); it++) {
+    for (auto it = ArticFunctions::setupFunctions.begin(); it != ArticFunctions::setupFunctions.end(); it++) {
         setupCorrect = (*it)() && setupCorrect;
     }
 

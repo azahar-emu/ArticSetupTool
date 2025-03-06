@@ -23,7 +23,7 @@ enum class HandleType {
     ARCHIVE
 };
 
-namespace ArticBaseFunctions {
+namespace ArticFunctions {
 
     ExHeader_Info lastAppExheader;
     std::map<u64, HandleType> openHandles;
@@ -37,7 +37,7 @@ namespace ArticBaseFunctions {
 
         if (!good) return;
 
-        ArticBaseCommon::Buffer* tid_buffer = mi.ReserveResultBuffer(0, sizeof(u64));
+        ArticProtocolCommon::Buffer* tid_buffer = mi.ReserveResultBuffer(0, sizeof(u64));
         if (!tid_buffer) {
             return;
         }
@@ -56,7 +56,7 @@ namespace ArticBaseFunctions {
 
         if (!good) return;
 
-        ArticBaseCommon::Buffer* prod_code_buffer = mi.ReserveResultBuffer(0, sizeof(FS_ProductInfo));
+        ArticProtocolCommon::Buffer* prod_code_buffer = mi.ReserveResultBuffer(0, sizeof(FS_ProductInfo));
         if (!prod_code_buffer) {
             return;
         }
@@ -80,7 +80,7 @@ namespace ArticBaseFunctions {
 
         if (!good) return;
 
-        ArticBaseCommon::Buffer* exheader_buf = mi.ReserveResultBuffer(0, sizeof(lastAppExheader));
+        ArticProtocolCommon::Buffer* exheader_buf = mi.ReserveResultBuffer(0, sizeof(lastAppExheader));
         if (!exheader_buf) {
             return;
         }
@@ -105,7 +105,7 @@ namespace ArticBaseFunctions {
         }
         u8* start_addr = reinterpret_cast<u8*>(out);
 
-        ArticBaseCommon::Buffer* code_buf = mi.ReserveResultBuffer(0, size);
+        ArticProtocolCommon::Buffer* code_buf = mi.ReserveResultBuffer(0, size);
         if (!code_buf) {
             return;
         }
@@ -148,7 +148,7 @@ namespace ArticBaseFunctions {
             return;
         }
 
-        ArticBaseCommon::Buffer* icon_buf = mi.ReserveResultBuffer(0, static_cast<size_t>(file_size));
+        ArticProtocolCommon::Buffer* icon_buf = mi.ReserveResultBuffer(0, static_cast<size_t>(file_size));
         if (!icon_buf) {
             FSFILE_Close(fd);
             return;
@@ -225,7 +225,7 @@ namespace ArticBaseFunctions {
             return;
         }
 
-        ArticBaseCommon::Buffer* handle_buf = mi.ReserveResultBuffer(0, sizeof(Handle));
+        ArticProtocolCommon::Buffer* handle_buf = mi.ReserveResultBuffer(0, sizeof(Handle));
         if (!handle_buf) {
             FSFILE_Close(out);
             return;
@@ -258,7 +258,7 @@ namespace ArticBaseFunctions {
             return;
         }
 
-        ArticBaseCommon::Buffer* handle_buf = mi.ReserveResultBuffer(0, sizeof(FS_Archive));
+        ArticProtocolCommon::Buffer* handle_buf = mi.ReserveResultBuffer(0, sizeof(FS_Archive));
         if (!handle_buf) {
             FSUSER_CloseArchive(out);
             return;
@@ -312,7 +312,7 @@ namespace ArticBaseFunctions {
             return;
         }
 
-        ArticBaseCommon::Buffer* handle_buf = mi.ReserveResultBuffer(0, sizeof(Handle));
+        ArticProtocolCommon::Buffer* handle_buf = mi.ReserveResultBuffer(0, sizeof(Handle));
         if (!handle_buf) {
             FSFILE_Close(out);
             return;
@@ -324,7 +324,7 @@ namespace ArticBaseFunctions {
         u64 fileSize;
         Result res2 = FSFILE_GetSize(out, &fileSize);
         if (R_SUCCEEDED(res2)) {
-            ArticBaseCommon::Buffer* size_buf = mi.ReserveResultBuffer(1, sizeof(u64));
+            ArticProtocolCommon::Buffer* size_buf = mi.ReserveResultBuffer(1, sizeof(u64));
             if (!size_buf) {
                 FSFILE_Close(out);
                 return;
@@ -358,7 +358,7 @@ namespace ArticBaseFunctions {
             return;
         }
 
-        ArticBaseCommon::Buffer* handle_buf = mi.ReserveResultBuffer(0, sizeof(Handle));
+        ArticProtocolCommon::Buffer* handle_buf = mi.ReserveResultBuffer(0, sizeof(Handle));
         if (!handle_buf) {
             FSDIR_Close(out);
             return;
@@ -403,7 +403,7 @@ namespace ArticBaseFunctions {
             return;
         }
 
-        ArticBaseCommon::Buffer* size_buf = mi.ReserveResultBuffer(0, sizeof(u64));
+        ArticProtocolCommon::Buffer* size_buf = mi.ReserveResultBuffer(0, sizeof(u64));
         if (!size_buf) {
             return;
         }
@@ -429,7 +429,7 @@ namespace ArticBaseFunctions {
             return;
         }
 
-        ArticBaseCommon::Buffer* size_buf = mi.ReserveResultBuffer(0, sizeof(u32));
+        ArticProtocolCommon::Buffer* size_buf = mi.ReserveResultBuffer(0, sizeof(u32));
         if (!size_buf) {
             return;
         }
@@ -454,7 +454,7 @@ namespace ArticBaseFunctions {
 
         logger.Debug("Read o=0x%08X, l=0x%08X", (u32)offset, (u32)size);
 
-        ArticBaseCommon::Buffer* read_buf = mi.ReserveResultBuffer(0, size);
+        ArticProtocolCommon::Buffer* read_buf = mi.ReserveResultBuffer(0, size);
         if (!read_buf) {
             return;
         }
@@ -482,7 +482,7 @@ namespace ArticBaseFunctions {
 
         if (!good) return;
 
-        ArticBaseCommon::Buffer* read_dir_buf = mi.ReserveResultBuffer(0, entryCount * sizeof(FS_DirectoryEntry));
+        ArticProtocolCommon::Buffer* read_dir_buf = mi.ReserveResultBuffer(0, entryCount * sizeof(FS_DirectoryEntry));
         if (!read_dir_buf) {
             return;
         }
@@ -520,7 +520,7 @@ namespace ArticBaseFunctions {
 
         if (good) mi.FinishInputParameters();
 
-        ArticBaseCommon::Buffer* ret_buf = mi.ReserveResultBuffer(0, 4);
+        ArticProtocolCommon::Buffer* ret_buf = mi.ReserveResultBuffer(0, 4);
         if (!ret_buf) {
             return;
         }
@@ -592,7 +592,7 @@ namespace ArticBaseFunctions {
                 return;
             }
 
-            ArticBaseCommon::Buffer* ret_buf = mi.ReserveResultBuffer(0, (int)size);
+            ArticProtocolCommon::Buffer* ret_buf = mi.ReserveResultBuffer(0, (int)size);
             if (!ret_buf) {
                 FSPXI_CloseFile(fspxiHandle, file);
                 FSPXI_CloseArchive(fspxiHandle, archive);
@@ -640,7 +640,7 @@ namespace ArticBaseFunctions {
                 return;
             }
 
-            ArticBaseCommon::Buffer* ret_buf = mi.ReserveResultBuffer(0, (int)size);
+            ArticProtocolCommon::Buffer* ret_buf = mi.ReserveResultBuffer(0, (int)size);
             if (!ret_buf) {
                 FSFILE_Close(file);
                 return;
@@ -793,7 +793,7 @@ namespace ArticBaseFunctions {
             return;
         }
 
-        ArticBaseCommon::Buffer* ret_buf = mi.ReserveResultBuffer(0, nim_extheader_bin_size);
+        ArticProtocolCommon::Buffer* ret_buf = mi.ReserveResultBuffer(0, nim_extheader_bin_size);
         if (!ret_buf) {
             free(buffer);
             return;
@@ -822,7 +822,7 @@ namespace ArticBaseFunctions {
 
     template<std::size_t N>
     constexpr auto& METHOD_NAME(char const (&s)[N]) {
-        static_assert(N < sizeof(ArticBaseCommon::RequestPacket::method), "String exceeds 32 bytes!");
+        static_assert(N < sizeof(ArticProtocolCommon::RequestPacket::method), "String exceeds 32 bytes!");
         return s;
     }
 
