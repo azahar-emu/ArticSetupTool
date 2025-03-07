@@ -42,7 +42,7 @@ RUN_FLAGS :=
 
 ifeq ($(TARGET),$(filter $(TARGET),3DS WIIU))
 	TITLE := Azahar Artic Setup Tool
-	DESCRIPTION := Setup tool for Azahar Emulator
+	DESCRIPTION := Azahar Artic Setup Tool
     AUTHOR := PabloMK7
 endif
 
