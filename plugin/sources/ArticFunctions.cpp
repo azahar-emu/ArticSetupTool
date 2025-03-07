@@ -524,7 +524,7 @@ namespace ArticFunctions {
         if (!ret_buf) {
             return;
         }
-        ret_buf->data[0] = INITIAL_SETUP_APP_VERSION;
+        reinterpret_cast<u32*>(ret_buf->data)[0] = INITIAL_SETUP_APP_VERSION;
 
         mi.FinishGood(0);
     }
@@ -539,7 +539,7 @@ namespace ArticFunctions {
 
         if (!good) return;
 
-        if (type < 0 || type > 3) {
+        if (type < 0 || type > 5) {
             mi.FinishGood(-1);
             return;
         }
@@ -650,6 +650,39 @@ namespace ArticFunctions {
             res = FSFILE_Read(file, &bytes_read, 0, ret_buf->data, (u32)size);
             FSFILE_Close(file);
             mi.FinishGood(bytes_read != size ? -2 : res);
+        } else if (type == 4) {
+            Result res = cfguInit();
+            if (R_FAILED(res)) {
+                mi.FinishGood(res);
+            }
+
+            u64 consoleID = 0;
+            u32 random = 0;
+            res = CFGU_GetConfigInfoBlk2(0x8, 0x00090001, &consoleID);
+            if (R_SUCCEEDED(res)) res = CFGU_GetConfigInfoBlk2(0x4, 0x00090002, &random);
+            if (R_FAILED(res)) {
+                cfguExit();
+                mi.FinishGood(res);
+            }
+
+            ArticProtocolCommon::Buffer* ret_buf = mi.ReserveResultBuffer(0, 0xC);
+            if (!ret_buf) {
+                return;
+            }
+
+            *reinterpret_cast<u64*>(ret_buf->data) = consoleID;
+            *reinterpret_cast<u32*>(ret_buf->data + 8) = random;
+
+            mi.FinishGood(res);
+        } else if (type == 5) {
+            ArticProtocolCommon::Buffer* ret_buf = mi.ReserveResultBuffer(0, 6);
+            if (!ret_buf) {
+                return;
+            }
+
+            memcpy(ret_buf->data, OS_SharedConfig->wifi_macaddr, 6);
+
+            mi.FinishGood(0);
         }
     }
 
