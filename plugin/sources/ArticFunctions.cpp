@@ -658,6 +658,15 @@ namespace ArticFunctions {
             u32 bytes_read = 0;
             res = FSFILE_Read(file, &bytes_read, 0, ret_buf->data, (u32)size);
             FSFILE_Close(file);
+            if (R_SUCCEEDED(res) && bytes_read == size) {
+                u64 check_null = *reinterpret_cast<u64*>(ret_buf->data);
+                if (check_null == 0) {
+                    logger.Error("The OTP backup in your SD card is empty\n    This is an known issue with fastboot3DS\n    Dump the otp file manually and place in:");
+                    logger.Error(filePath);
+                    mi.FinishGood(-3);
+                    return;
+                }
+            }
             mi.FinishGood(bytes_read != size ? -2 : res);
         } else if (type == 4) {
             Result res = cfguInit();
