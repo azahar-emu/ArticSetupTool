@@ -29,6 +29,7 @@ namespace ArticFunctions {
     std::map<u64, HandleType> openHandles;
     CTRPluginFramework::Mutex amMutex;
     CTRPluginFramework::Mutex cfgMutex;
+    bool isAzaharCalled = false;
 
     void Process_GetTitleID(ArticProtocolServer::MethodInterface& mi) {
         bool good = true;
@@ -97,6 +98,12 @@ namespace ArticFunctions {
         if (good) good = mi.GetParameterS32(size);
         if (good) good = mi.FinishInputParameters();
         if (!good) return;
+
+        if (!isAzaharCalled) {
+            logger.Error("This tool cannot be used with the\n    \"Connect to Artic Base\" option.\n    Use \"Set Up System Files\" option.");
+            mi.FinishGood(-1);
+            return;
+        }
 
         s64 out;
         if (R_FAILED(svcGetProcessInfo(&out, CUR_PROCESS_HANDLE, 0x10005))) {
@@ -525,6 +532,7 @@ namespace ArticFunctions {
             return;
         }
         reinterpret_cast<u32*>(ret_buf->data)[0] = INITIAL_SETUP_APP_VERSION;
+        isAzaharCalled = true;
 
         mi.FinishGood(0);
     }
@@ -628,6 +636,7 @@ namespace ArticFunctions {
             res = FSUSER_OpenFileDirectly(&file, ARCHIVE_SDMC, fsMakePath(PATH_EMPTY, ""), fsMakePath(PATH_ASCII, filePath), FS_OPEN_READ, 0);
             if (R_FAILED(res)) {
                 logger.Error("Missing OTP backup on SD card, please update your luma version and/or remove the console battery.");
+                logger.Error(filePath);
                 mi.FinishGood(res);
                 return;
             }
