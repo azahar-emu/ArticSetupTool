@@ -8,7 +8,7 @@
 2) Run the Azahar Artic Setup Tool application. Press A to confirm you want to start it.
 3) On the Azahar Emulator, go to `File -> Set Up System Files` and enter the IP address displayed on your console.
 
-NOTE: A recent version of Luma3DS (v13.3.1 or newer) is requires to use Azahar Artic Setup Tool. You can get it [here](https://github.com/LumaTeam/Luma3DS/releases/latest).
+NOTE: A recent version of Luma3DS (v13.3.1 or newer) is required to use Azahar Artic Setup Tool. You can get it [here](https://github.com/LumaTeam/Luma3DS/releases/latest).
 
 ## License
 See [LICENSE](LICENSE)
