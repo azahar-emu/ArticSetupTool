@@ -15,7 +15,7 @@ extern "C" {
 }
 
 extern bool isControllerMode;
-constexpr u32 INITIAL_SETUP_APP_VERSION = 0;
+constexpr u32 INITIAL_SETUP_APP_VERSION = 1;
 
 enum class HandleType {
     FILE,
@@ -523,7 +523,22 @@ namespace ArticFunctions {
     }
 
     void System_IsAzaharInitialSetup(ArticProtocolServer::MethodInterface& mi) {
+        // This function is stubbed, only kept for compatibility reasons
+
         bool good = true;
+
+        if (good) mi.FinishInputParameters();
+
+        logger.Error("Tool and Azahar version mismatch.\n    Please check for updates.");
+
+        mi.FinishGood(-1);
+    }
+
+    void System_ArticSetupVersion(ArticProtocolServer::MethodInterface& mi) {
+        bool good = true;
+        s32 expected;
+
+        if (good) good = mi.GetParameterS32(expected);
 
         if (good) mi.FinishInputParameters();
 
@@ -533,6 +548,37 @@ namespace ArticFunctions {
         }
         reinterpret_cast<u32*>(ret_buf->data)[0] = INITIAL_SETUP_APP_VERSION;
         isAzaharCalled = true;
+
+        if ((u32)expected != INITIAL_SETUP_APP_VERSION) {
+            logger.Error("Tool and Azahar version mismatch.\n    Please check for updates.");
+        }
+
+        mi.FinishGood(0);
+    }
+
+    void System_ReportDeviceID(ArticProtocolServer::MethodInterface& mi) {
+        bool good = true;
+        s32 deviceID;
+
+        if (good) good = mi.GetParameterS32(deviceID);
+
+        if (good) mi.FinishInputParameters();
+        
+        Result res = amInit();
+        if (R_FAILED(res)) {
+            mi.FinishGood(res);
+            return;
+        }
+
+        u32 myDeviceID;
+        res = AM_GetDeviceId(&myDeviceID);
+        amExit();
+
+        if ((u32)deviceID != myDeviceID) {
+            logger.Error("Azahar is linked to a different console than this one. Please unlink your previous console from emulator settings before continuing.");
+            mi.FinishGood(-1);
+            return;
+        }
 
         mi.FinishGood(0);
     }
@@ -898,6 +944,8 @@ namespace ArticFunctions {
         {METHOD_NAME("FSDIR_Close"), FSDIR_Close_},
         
         {METHOD_NAME("System_IsAzaharInitialSetup"), System_IsAzaharInitialSetup},
+        {METHOD_NAME("System_ArticSetupVersion"), System_ArticSetupVersion},
+        {METHOD_NAME("System_ReportDeviceID"), System_ReportDeviceID},
         {METHOD_NAME("System_GetSystemFile"), System_GetSystemFile},
         {METHOD_NAME("System_GetNIM"), System_GetNIM},
     };

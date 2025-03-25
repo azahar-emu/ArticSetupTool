@@ -150,12 +150,12 @@ void Logger::Handler() {
                 printf("[I] %s\n", log.string.c_str());
                 break;
             case PendingLog::Type::WARNING:
-                topScreenConsole.fg = 19;
+                topScreenConsole.fg = 3;
                 printf("[W] %s\n", log.string.c_str());
                 topScreenConsole.fg = 0;
                 break;
             case PendingLog::Type::ERROR:
-                topScreenConsole.fg = 17;
+                topScreenConsole.fg = 1;
                 printf("[E] %s\n", log.string.c_str());
                 topScreenConsole.fg = 0;
                 break;

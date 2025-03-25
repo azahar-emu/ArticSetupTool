@@ -127,6 +127,12 @@ bool launchPlugin() {
     return true;
 }
 
+bool checkEmulator() {
+    s64 out = 0;
+	svcGetSystemInfo(&out, 0x20000, 0);
+	return out != 0;
+}
+
 PrintConsole topScreenConsole, bottomScreenConsole;
 int transferedBytes = 0;
 void Main() {
@@ -148,14 +154,20 @@ void Main() {
     consoleSelect(&topScreenConsole);
     consoleClear();
 
+    bool isEmulator = checkEmulator();
+
     {
         CTRPluginFramework::BCLIM((void*)__data_logo_bin, __data_logo_bin_size).Render(CTRPluginFramework::Rect<int>((320 - 128) / 2, (240 - 128) / 2, 128, 128));
     }
     logger.Raw(false, "\n      Azahar Artic Setup v%d.%d.%d\n", VERSION_MAJOR, VERSION_MINOR, VERSION_REVISION);
-    logger.Raw(false, "    Press A to launch setup tool.");
+    logger.Raw(false, isEmulator ? " " : "    Press A to launch setup tool.");
     logger.Raw(false, "    Press B or START to exit.");
     logger.Raw(true, "");
     logger.Info("Welcome to Azahar Artic Setup Tool!\n    Only use this tool with Azahar Emulator\n\n    Check bottom screen for controls.");
+    
+    if (isEmulator) {
+        logger.Error("This tool can only be used on a real console.");
+    }
 
     bool do_jump = false;
     while (aptMainLoop())
@@ -170,7 +182,7 @@ void Main() {
             break;
         }
 
-        if (kDown & KEY_A) {
+        if ((kDown & KEY_A) && !isEmulator) {
             logger.Info("Launching Azahar Artic Setup");
             bool done = extractPlugin() && launchPlugin();
             if (done) {
