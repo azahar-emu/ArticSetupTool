@@ -15,7 +15,7 @@ extern "C" {
 }
 
 extern bool isControllerMode;
-constexpr u32 INITIAL_SETUP_APP_VERSION = 1;
+constexpr u32 INITIAL_SETUP_APP_VERSION = 2;
 
 enum class HandleType {
     FILE,
@@ -619,12 +619,23 @@ namespace ArticFunctions {
             strcpy(file_name, files[type]);
             char* end = file_name + strlen(files[type]);
 
-            if (type == 0 || type == 1) {
+            if (type == 0) {
+                // Check for region changed file first
+                *end = 'C';
+            } else if (type == 1) {
                 *end = 'A';
             }
 
             FSPXI_File file;
             res = FSPXI_OpenFile(fspxiHandle, &file, archive, fsMakePath(PATH_ASCII, file_name), FS_OPEN_READ, 0);
+            if (type == 0) {
+                if (R_SUCCEEDED(res)) {
+                    logger.Info("NOTE: This console is region changed,\n    some functionality may not work properly.");
+                } else {
+                    *end = 'A';
+                    res = FSPXI_OpenFile(fspxiHandle, &file, archive, fsMakePath(PATH_ASCII, file_name), FS_OPEN_READ, 0);
+                }
+            }
             if (R_FAILED(res)) {
                 *end = 'B';
                 res = FSPXI_OpenFile(fspxiHandle, &file, archive, fsMakePath(PATH_ASCII, file_name), FS_OPEN_READ, 0);

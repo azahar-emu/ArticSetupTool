@@ -26,7 +26,7 @@ LIBRARIES := ctru
 
 VERSION_MAJOR := 1
 VERSION_MINOR := 0
-VERSION_MICRO := 2
+VERSION_MICRO := 3
 
 BUILD_FLAGS := -march=armv6k -mtune=mpcore -mfloat-abi=hard
 BUILD_FLAGS_CC := -g -Wall -Wno-strict-aliasing -O3 -mword-relocations \
